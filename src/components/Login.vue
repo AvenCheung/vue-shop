@@ -100,7 +100,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #fff;
-    img {
+    > img {
       width: 100%;
       height: 100%;
       border-radius: 50%;
