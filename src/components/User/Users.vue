@@ -28,7 +28,7 @@
                 <el-table-column label="邮箱" prop="email"></el-table-column>
                 <el-table-column label="电话" prop="mobile"></el-table-column>
                 <el-table-column label="角色" prop="role_name"></el-table-column>
-                <el-table-column label="角色">
+                <el-table-column label="状态">
                     <!-- 添加作用域插槽 -->
                     <template slot-scope="scope">
                         <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)"></el-switch>
@@ -36,12 +36,12 @@
                 </el-table-column>
                 <el-table-column label="操作" width="180px">
                     <!-- 通过作用域插槽进行行内数据 -->
-                    <template>
+                    <template slot-scope="scope">
                         <!-- 用户编辑按钮 -->
-                        <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog"></el-button>
+                        <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
 
                         <!-- 用户删除按钮 -->
-                        <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+                        <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)"></el-button>
 
                         <!-- 用户分配角色按钮 -->
                         <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
@@ -83,11 +83,21 @@
         </el-dialog>
 
         <!-- 编辑用户的对话框 -->
-        <el-dialog title="提示" :visible.sync="editDialogVisible" width="30%">
-            <span>这是一段信息</span>
+        <el-dialog title="编辑用户" :visible.sync="editDialogVisible" width="50%" @close="editDialogClosed">
+            <el-form :model="editForm" :rules="editFormRule" ref="editFormRef" label-width="70px">
+                <el-form-item label="用户名" prop="username">
+                    <el-input v-model="editForm.username" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="editForm.email"></el-input>
+                </el-form-item>
+                <el-form-item label="手机" prop="mobile">
+                    <el-input v-model="editForm.mobile"></el-input>
+                </el-form-item>
+            </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="editDialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="editUserInfo">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -155,7 +165,21 @@ export default {
             ]
         },
         // 编辑用户对话框的对象
-        editDialogVisible: false
+        editDialogVisible: false,
+        // 查询到的用户信息对象
+        editForm: {},
+        // 编辑用户校验对象
+        editFormRule: {
+            email: [
+                {required: true, message: '请输入合法的邮箱', trigger: 'blur'},
+                {validator: checkEmail, trigger: 'blur'}
+            ],
+            mobile: [
+                {required: true, message: '请输入合法的手机号', trigger: 'blur'},
+                {validator: checkMobile, trigger: 'blur'}
+            ]
+        }
+
     }
   },
   created () {
@@ -193,11 +217,11 @@ export default {
         }
         this.$message.success('更新用户状态成功')
     },
-    // 监听对话框关闭重置的事件
+    // 监听添加用户对话框 关闭重置的事件
     addDiglogClosed () {
         this.$refs.addFormRef.resetFields()
     },
-    // 添加新用户事件
+    // 点击确定按钮 添加新用户事件
     addUser () {
         this.$refs.addFormRef.validate(async valid => {
             if (!valid) return
@@ -213,8 +237,65 @@ export default {
         })
     },
     // 打开编辑用户对话框事件
-    showEditDialog () {
-            this.editDialogVisible = true
+    async showEditDialog (id) {
+        const { data: res} = await this.$http.get('users/' + id)
+        if (res.meta.status !== 200) {
+            return this.$message.error('查询用户信息失败')
+        }
+        this.$message.success('查询用户信息成功')
+        this.editForm = res.data
+        this.editDialogVisible = true
+    },
+    // 监听编辑用户对话框 关闭重置的事件
+    editDialogClosed () {
+        this.$refs.editFormRef.resetFields()
+    },
+    // 点击确定按钮 修改用户信息事件
+    editUserInfo () {
+        this.$refs.editFormRef.validate(async valid => {
+            // 这里先做表单预验证处理，valid表示表单验证的结果
+            if (!valid) return
+            const { data: res } = await this.$http.put('users/' + this.editForm.id, {
+                email: this.editForm.email,
+                mobile: this.editForm.mobile
+            })
+            if (res.meta.status !== 200) {
+                this.$message.error('更新用户信息失败!')
+            }
+            this.$message.success('更新用户信息成功!')
+            // 关闭对话框
+            this.editDialogVisible = false
+            // 更新用户信息列表
+            this.getUserList()
+        })
+    },
+    // 删除用户信息 事件
+    async removeUserById (id) {
+         const confirmResult = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).catch(err => err)
+        /**
+         * catch(err){
+         * return err
+         * }
+         * 简化成
+         * catch(err => err)
+         */
+        // console.log(confirmResult)
+        // 如果确认删除则返回字符串类型 confirm
+        // 如果取消删除则返回字符串类型 cancel
+        if (confirmResult !== 'confirm') {
+            return this.$message.info('已取消了删除！')
+        }
+        // console.log('确认了删除')
+        const { data: res} = await this.$http.delete('users/' + id)
+        if (res.meta.status !== 200) {
+            return this.$message.error('删除用户失败！')
+        }
+        this.$message.success('删除用户成功！')
+        this.getUserList()
     }
   }
 }
