@@ -195,6 +195,7 @@ export default {
         }
         this.userlist = res.data.users
         this.total = res.data.total
+        this.$message.success('获取用户列表成功！')
         console.log(res)
     },
     // 监听 pagesize 改变的事件
