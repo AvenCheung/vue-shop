@@ -60,7 +60,7 @@
     </el-card>
 
     <!-- 分配权限对话框 -->
-    <el-dialog title="分配权限" :visible.sync="setRightDialogVisible" width="30%" @close="setRightDialogClosed">
+    <el-dialog title="分配权限" :visible.sync="setRightDialogVisible" width="40%" @close="setRightDialogClosed">
       <el-tree :data="rightList" :props="treeProps" show-checkbox
       node-key="id" default-expand-all :default-checked-keys="defkeys" ref="treeRef"></el-tree>
       <span slot="footer" class="dialog-footer">
