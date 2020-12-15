@@ -30,3 +30,11 @@ body,
   display: flex;
   align-items: center;
 }
+
+.tree-table{
+  margin-top: 15px;
+}
+
+.el-cascader-menu {
+  height: 300px;
+}
