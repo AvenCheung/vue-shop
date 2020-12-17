@@ -16,5 +16,6 @@ module.exports = {
     'object-curly-newline': 0,
     'indent': 0,
     'object-curly-spacing': 0,
+    'camelcase': 0
   }
 }

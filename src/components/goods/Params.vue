@@ -31,9 +31,9 @@
             <el-table-column type="index" label="#"></el-table-column>
             <el-table-column label="参数名称" prop="attr_name"></el-table-column>
             <el-table-column label="操作">
-              <template>
-                <el-button icon="el-icon-edit" type="primary" size="mini">编辑</el-button>
-                <el-button icon="el-icon-delete" type="danger" size="mini">删除</el-button>
+              <template slot-scope="scope">
+                <el-button icon="el-icon-edit" type="primary" size="mini" @click="showEditDialog(scope.row.attr_id)">编辑</el-button>
+                <el-button icon="el-icon-delete" type="danger" size="mini" @click="removeParams">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -50,9 +50,9 @@
             <el-table-column type="index" label="#"></el-table-column>
             <el-table-column label="属性名称" prop="attr_name"></el-table-column>
             <el-table-column label="操作">
-              <template>
-                <el-button icon="el-icon-edit" type="primary" size="mini">编辑</el-button>
-                <el-button icon="el-icon-delete" type="danger" size="mini">删除</el-button>
+              <template slot-scope="scope">
+                <el-button icon="el-icon-edit" type="primary" size="mini" @click="showEditDialog(scope.row.attr_id)">编辑</el-button>
+                <el-button icon="el-icon-delete" type="danger" size="mini" @click="removeParams">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -60,7 +60,7 @@
       </el-tabs>
     </el-card>
 
-    <!-- 添加参数的对话框 -->
+    <!-- 添加参数 对话框 -->
     <el-dialog
       :title="'添加' + titleText"
       :visible.sync="addParamsDialogVisible"
@@ -73,7 +73,24 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addParamsDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addParamsDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addParams">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 编辑参数 对话框 -->
+    <el-dialog
+      :title="'编辑' + titleText"
+      :visible.sync="editParamsDialogVisible"
+      width="50%"
+      @close=editParamsDialogClosed>
+      <el-form ref="editParamsFormRef" :model="editParamsForm" label-width="100px" :rules="editParamsFormRules">
+        <el-form-item :label="titleText" prop="attr_name">
+          <el-input v-model="editParamsForm.attr_name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editParamsDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editParams">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -107,16 +124,28 @@ export default {
       // 表单数据验证规则对象
       addParamsFormRules: {
         attr_name: [
-          { required: true, message: '请输入分类名称', trigger: 'blur'}
+          { required: true, message: '请输入参数名称', trigger: 'blur'}
         ]
       },
-      addParamsDialogVisible: false
+      // 添加参数对话框控制对象
+      addParamsDialogVisible: false,
+      // 编辑表单的数据对象
+      editParamsForm: {},
+      // 编辑表单数据验证规则对象
+      editParamsFormRules: {
+        attr_name: [
+          { required: true, message: '请输入参数名称', trigger: 'blur'}
+        ]
+      },
+      // 编辑参数对话框控制对象
+      editParamsDialogVisible: false
     }
   },
   created () {
     this.getCateList()
   },
   methods: {
+    // 获取商品分类数据
     async getCateList () {
       const { data: res} = await this.$http.get('categories')
       if (res.meta.status !== 200) {
@@ -154,14 +183,69 @@ export default {
         this.onlyTabData = res.data
       }
     },
-    // 添加参数对话框
+    // 点击打开 添加参数对话框
     addParanmsDialog () {
       this.addParamsDialogVisible = true
     },
     // 监听对话框关闭时表单数据重置的事件
     addParamsDialogClosed () {
       this.$refs.addParamsFormRef.resetFields()
-    }
+    },
+    // 点击确定提交添加参数数据
+    addParams () {
+      this.$refs.addParamsFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res} = await this.$http.post(`categories/${this.catId}/attributes`, {
+          attr_name: this.addParamsForm.attr_name,
+          attr_sel: this.activeName
+        })
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加参数失败！')
+        }
+        this.$message.success('添加参数成功！')
+        this.addParamsDialogVisible = false
+        this.getParamsData()
+      })
+    },
+    // 点击展开 编辑参数对话框
+    async showEditDialog (attr_id) {
+      // 查询当前参数的信息
+      const { data: res } = await this.$http.get(
+        `categories/${this.catId}/attributes/${attr_id}`,
+        {
+          params: { attr_sel: this.activeName }
+        }
+      )
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取参数信息失败！')
+      }
+      this.editParamsForm = res.data
+      console.log('当前参数信息', this.editParamsForm)
+      this.editParamsDialogVisible = true
+    },
+    // 点击按钮，修改参数
+    editParams () {
+      // 先进行预验证
+      this.$refs.editParamsFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res} = await this.$http.put(`categories/${this.catId}/attributes/${this.editParamsForm.attr_id}`, {
+          attr_name: this.editParamsForm.attr_name,
+          attr_sel: this.activeName
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error('修改参数信息失败！')
+        }
+        this.$message.success('修改参数信息成功！')
+        this.getParamsData()
+        this.editParamsDialogVisible = false
+      })
+    },
+    // 关闭对话框编辑表单重置事件
+    editParamsDialogClosed () {
+      this.$refs.editParamsFormRef.resetFields()
+    },
+    // 删除参数事件
+    removeParams () {}
   },
   // 计算器
   computed: {
