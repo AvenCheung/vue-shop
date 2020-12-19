@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Button, Input, Form, FormItem, Message, Container,
   Header, Aside, Main, Menu, Submenu, MenuItem, Breadcrumb, BreadcrumbItem, Card,
-   Row, Col, Table, TableColumn, Switch, Tooltip, Pagination, Dialog, MessageBox, Tag, Tree, Select, Option, Cascader, Alert, Tabs, TabPane, Steps, Step, CheckboxGroup, Checkbox } from 'element-ui'
+   Row, Col, Table, TableColumn, Switch, Tooltip, Pagination, Dialog, MessageBox, Tag, Tree, Select, Option, Cascader, Alert, Tabs, TabPane, Steps, Step, CheckboxGroup, Checkbox, Upload } from 'element-ui'
 
 Vue.use(Button)
 Vue.use(Input)
@@ -37,6 +37,13 @@ Vue.use(Steps)
 Vue.use(Step)
 Vue.use(CheckboxGroup)
 Vue.use(Checkbox)
+Vue.use(Upload)
+// Vue.use()
+// Vue.use()
+// Vue.use()
+// Vue.use()
+// Vue.use()
+// Vue.use()
 // 将弹框组件注册为全局组件，将他挂载到vue的原型对象中
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

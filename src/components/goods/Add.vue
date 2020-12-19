@@ -50,12 +50,30 @@
               <el-input v-model="item.attr_vals"></el-input>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
+          <el-tab-pane label="商品图片" name="3">
+            <el-upload
+              :action="uploadURL"
+              :headers="uploadHeaders"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :on-success="handleSuccess"
+              list-type="picture">
+              <el-button size="small" type="primary">点击上传</el-button>
+            </el-upload>
+          </el-tab-pane>
           <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
           <el-tab-pane label="完成" name="5">完成</el-tab-pane>
         </el-tabs>
       </el-form>
     </el-card>
+
+    <!-- 图片预览对话框 -->
+    <el-dialog
+      title="图片预览"
+      :visible.sync="previewVisible"
+      width="60%">
+      <img :src="previewPath" alt="" class="previewImg">
+    </el-dialog>
   </div>
 </template>
 
@@ -71,7 +89,9 @@ export default {
         goods_price: 0,
         goods_weight: 0,
         goods_number: 0,
-        goods_cat: []
+        goods_cat: [],
+        // 图片的数组
+        pics: []
       },
       // 添加商品表单校验规则对象
       addGoodsFormRules: {
@@ -105,7 +125,16 @@ export default {
       // 动态参数列表数据
       manyTableData: [],
       // 静态属性列表数据
-      onlyTableData: []
+      onlyTableData: [],
+      // 图片上传的后台服务器地址对象
+      uploadURL: 'http://127.0.0.1:8888/api/private/v1/upload',
+      // 图片上传组建的headers请求头
+      uploadHeaders: {
+        Authorization: window.sessionStorage.getItem('token')
+      },
+      // 图片预览对话框控制对象
+      previewVisible: false,
+      previewPath: ''
     }
   },
   created () {
@@ -154,6 +183,31 @@ export default {
         console.log(res.data)
         this.onlyTableData = res.data
       }
+    },
+    // 处理图片预览效果
+    handlePreview (file) {
+      this.previewPath = file.response.data.url
+      this.previewVisible = true
+    },
+    // 处理移除图片的操作
+    handleRemove (file) {
+      // console.log(file)
+      // 1.先获取要移除的图片的临时地址
+      const filePath = file.response.data.tmp_path
+      // 2.从pics数组中，找到这个图片对应的索引值
+      const i = this.addGoodsForm.pics.findIndex(x => x.pic === filePath)
+      // 3.调用数组的splice方法，将图片信息对象，从pics数组中移除
+      this.addGoodsForm.pics.splice(i, 1)
+      console.log(this.addGoodsForm)
+    },
+    // 监听图片上传成功的事件
+    handleSuccess (response) {
+      // 1.拼接得到一个图片信息对象
+      const picInfo = {pic: response.data.tmp_path}
+      // 2.将图片信息对象，push到pics数组中
+      this.addGoodsForm.pics.push(picInfo)
+      console.log(response)
+      console.log(this.addGoodsForm)
     }
   },
   computed: {
@@ -170,5 +224,8 @@ export default {
 <style lang="less" scoped>
 .el-checkbox{
   margin: 0 10px 0 0 !important
+}
+.previewImg{
+  width: 100%;
 }
 </style>
