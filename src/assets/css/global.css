@@ -42,3 +42,7 @@ body,
 .el-steps{
   margin: 20px;
 }
+
+.ql-editor{
+  min-height: 300px;
+}
