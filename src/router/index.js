@@ -13,7 +13,7 @@ import VueRouter from 'vue-router'
 // import Add from '../components/goods/Add.vue'
 // import Order from '../components/order/Order.vue'
 // import Report from '../components/report/Report.vue'
-//改为懒加载的模式
+// 改为懒加载的模式
 const Login = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/Login.vue')
 const Home = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/Home.vue')
 const Welcome = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/Welcome.vue')
@@ -30,7 +30,6 @@ const Add = () => import(/* webpackChunkName: "GoodsList_Add" */ '../components/
 
 const Order = () => import(/* webpackChunkName: "Order_Report" */ '../components/order/Order.vue')
 const Report = () => import(/* webpackChunkName: "Order_Report" */ '../components/report/Report.vue')
-
 
 Vue.use(VueRouter)
 
