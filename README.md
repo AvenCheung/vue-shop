@@ -2,15 +2,15 @@ Vue实战项目：电商管理系统
 
 # 界面预览
 
-![image 2](Vue实战项目：电商管理系统.assets/Image 2.png)
+![image2](Vue实战项目：电商管理系统.assets/Image2.png)
 
-![image 3](Vue实战项目：电商管理系统.assets/Image 3.png)
+![image3](Vue实战项目：电商管理系统.assets/Image3.png)
 
-![image 4](Vue实战项目：电商管理系统.assets/Image 4.png)
+![image4](Vue实战项目：电商管理系统.assets/Image4.png)
 
-![image 5](Vue实战项目：电商管理系统.assets/Image 5.png)
+![image5](Vue实战项目：电商管理系统.assets/Image5.png)
 
-![image 7](Vue实战项目：电商管理系统.assets/Image 7.png)
+![image7](Vue实战项目：电商管理系统.assets/Image7.png)
 
 #  1. 项目概述
 
