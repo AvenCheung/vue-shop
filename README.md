@@ -285,7 +285,7 @@ git push -u origin login //提交到新分支login
 
 ## 4.1 整体布局
 
-<img src="Vue实战项目：电商管理系统.assets/Image 3.png" alt="1594279250151" style="zoom:80%;" />
+<img src="Vue实战项目：电商管理系统.assets/Image8.png" alt="1594279250151" style="zoom:80%;" />
 
 实现 `Home.vue`
 
