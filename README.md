@@ -1,5 +1,17 @@
 Vue实战项目：电商管理系统
 
+# 界面预览
+
+![image 2](Vue实战项目：电商管理系统.assets/Image 2.png)
+
+![image 3](Vue实战项目：电商管理系统.assets/Image 3.png)
+
+![image 4](Vue实战项目：电商管理系统.assets/Image 4.png)
+
+![image 5](Vue实战项目：电商管理系统.assets/Image 5.png)
+
+![image 7](Vue实战项目：电商管理系统.assets/Image 7.png)
+
 #  1. 项目概述
 
 ## 如何使用该项目
@@ -273,7 +285,7 @@ git push -u origin login //提交到新分支login
 
 ## 4.1 整体布局
 
-<img src="Vue实战项目：电商管理系统.assets/1594279250151.png" alt="1594279250151" style="zoom:80%;" />
+<img src="Vue实战项目：电商管理系统.assets/Image 3.png" alt="1594279250151" style="zoom:80%;" />
 
 实现 `Home.vue`
 
