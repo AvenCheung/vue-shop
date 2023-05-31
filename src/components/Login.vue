@@ -3,7 +3,7 @@
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avatar_box">
-        <img src="../assets/logo.png" alt="">
+        <img src="../assets/logo.png" alt />
       </div>
       <!-- 登录表单区域 -->
       <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
@@ -16,10 +16,13 @@
           <el-input v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" type="password"></el-input>
         </el-form-item>
         <!-- 按钮区域 -->
-        <el-form-item class="btns">
-          <el-button type="primary" @click="login">登录</el-button>
-          <el-button type="info" @click="resetLoginForm">重置</el-button>
-        </el-form-item>
+        <div class="form-bottom">
+          <router-link to="/register" active-class="register-link">注册</router-link>
+          <div>
+            <el-button type="primary" @click="login">登录</el-button>
+            <el-button type="info" @click="resetLoginForm">重置</el-button>
+          </div>
+        </div>
       </el-form>
     </div>
   </div>
@@ -27,7 +30,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       // 这是登录表单的数据绑定对象
       loginForm: {
@@ -51,12 +54,12 @@ export default {
   },
   methods: {
     // 点击重置按钮，重置登录表单
-    resetLoginForm () {
+    resetLoginForm() {
       // console.log(this);
       this.$refs.loginFormRef.resetFields()
     },
-    login () {
-      this.$refs.loginFormRef.validate(async valid => {
+    login() {
+      this.$refs.loginFormRef.validate(async (valid) => {
         if (!valid) return
         const { data: res } = await this.$http.post('login', this.loginForm)
         if (res.meta.status !== 200) return this.$message.error('登录失败！')
@@ -115,10 +118,19 @@ export default {
   width: 100%;
   padding: 0 20px;
   box-sizing: border-box;
+  padding-bottom: 20px;
 }
 
-.btns {
+.form-bottom {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: row;
+  // justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.register-link {
+  color: #409eff;
 }
 </style>

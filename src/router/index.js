@@ -13,8 +13,10 @@ import VueRouter from 'vue-router'
 // import Add from '../components/goods/Add.vue'
 // import Order from '../components/order/Order.vue'
 // import Report from '../components/report/Report.vue'
+
 // 改为懒加载的模式
 const Login = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/Login.vue')
+const Register = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/Register.vue')
 const Home = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/Home.vue')
 const Welcome = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/Welcome.vue')
 
@@ -44,6 +46,11 @@ const router = new VueRouter({
       path: '/login',
       name: Login,
       component: Login
+    },
+    {
+      path: '/register',
+      name: Register,
+      component: Register
     },
     {
       path: '/home',

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import {
   Button, Input, Form, FormItem, Message, Container,
   Header, Aside, Main, Menu, Submenu, MenuItem, Breadcrumb, BreadcrumbItem, Card,
-  Row, Col, Table, TableColumn, Switch, Tooltip, Pagination, Dialog, MessageBox, Tag, Tree, Select, Option, Cascader, Alert, Tabs, TabPane, Steps, Step, CheckboxGroup, Checkbox, Upload
+  Row, Col, Table, TableColumn, Switch, Tooltip, Pagination, Dialog, MessageBox, Tag, Tree, Select, Option, Cascader, Alert, Tabs, TabPane, Steps, Step, CheckboxGroup, Checkbox, Upload, Avatar, Dropdown, DropdownMenu, DropdownItem
 } from 'element-ui'
 import Timeline from './timeline/index.js'
 import TimelineItem from './timeline-item/index.js'
@@ -44,7 +44,11 @@ const componentsUI = [
   Checkbox,
   Upload,
   Timeline,
-  TimelineItem
+  TimelineItem,
+  Avatar,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem
 ]
 
 componentsUI.map(componentItem => {

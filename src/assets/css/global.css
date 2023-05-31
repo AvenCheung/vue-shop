@@ -8,6 +8,11 @@ body,
   min-width: 1366px;
 }
 
+a {
+  color: #409EFF;
+  text-decoration-line: none;
+}
+
 .el-breadcrumb{
   margin-bottom: 15px;
   font-size: 12px;

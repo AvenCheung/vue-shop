@@ -34,6 +34,7 @@ Vue.prototype.$http = axios
 Vue.config.productionTip = false
 Vue.component('tree-table', TreeTable)
 Vue.use(VueQuillEditor)
+
 // 创建全局日期过滤器
 Vue.filter('dateFormat', function (originVal) {
   const dt = new Date(originVal)
